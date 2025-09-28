@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track My Order - Take & Go Chicken</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff8f0;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      color: white;
+      padding: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    .tracker {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+
+    input {
+      padding: 12px;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    button {
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff7e5f;
+    }
+
+    /* Timeline Progress */
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: #ddd;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .step {
+      position: relative;
+      z-index: 2;
+      background: #ddd;
+      color: #555;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .step.active {
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      color: white;
+    }
+
+    .step-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #ff7e5f;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍗 Track My Order</h1>
+  </header>
+
+  <section class="tracker">
+    <h2>Enter Your Tracking ID</h2>
+    <input type="text" id="trackingInput" placeholder="e.g. TG1673902938493">
+    <button onclick="trackOrder()">Check Status</button>
+
+    <div id="status"></div>
+
+    <!-- Timeline steps -->
+    <div class="steps">
+      <div id="step1" class="step">1</div>
+      <div id="step2" class="step">2</div>
+      <div id="step3" class="step">3</div>
+      <div id="step4" class="step">4</div>
+    </div>
+    <div class="step-labels">
+      <span>Received</span>
+      <span>Preparing</span>
+      <span>Delivery</span>
+      <span>Done</span>
+    </div>
+
+    <a href="index.html">⬅ Back to Home</a>
+  </section>
+
+  <script>
+    // Example order data with step number
+    const orders = {
+      "TG1673902938493": { status: "Order Received ✅", step: 1 },
+      "TG1673903000000": { status: "Preparing 🍳", step: 2 },
+      "TG1673904000000": { status: "Out for Delivery 🚚", step: 3 },
+      "TG1673905000000": { status: "Delivered 🎉", step: 4 }
+    };
+
+    function trackOrder() {
+      const trackingID = document.getElementById("trackingInput").value.trim();
+      const statusDiv = document.getElementById("status");
+
+      // Reset all steps
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById("step" + i).classList.remove("active");
+      }
+
+      if (!trackingID) {
+        statusDiv.textContent = "⚠️ Please enter your Tracking ID.";
+        return;
+      }
+
+      if (orders[trackingID]) {
+        statusDiv.textContent = "Tracking ID " + trackingID + " → " + orders[trackingID].status;
+
+        // Activate steps up to current one
+        for (let i = 1; i <= orders[trackingID].step; i++) {
+          document.getElementById("step" + i).classList.add("active");
+        }
+
+      } else {
+        statusDiv.textContent = "❌ Tracking ID not found. Please check again or contact Customer Care.";
+      }
+    }
+  </script>
+</body>
+</html>
